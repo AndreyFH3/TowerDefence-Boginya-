@@ -1,0 +1,113 @@
+{
+    "name": "CameraControlScheme",
+    "maps": [
+        {
+            "name": "Movement",
+            "id": "148c54e9-83f7-4691-b117-88f94f06e38a",
+            "actions": [
+                {
+                    "name": "DeltaMove",
+                    "type": "PassThrough",
+                    "id": "60345cf2-dad2-4226-9707-94ad697c959f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ZoomMouse",
+                    "type": "Value",
+                    "id": "4a25daa3-5dea-4dd7-b7a7-30ad35f9a9b6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "StartDeltaDrag",
+                    "type": "Button",
+                    "id": "c67543ef-76e4-406b-80fb-c9ff059e1a60",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "597dc879-b9d9-4f68-97c3-15fe1a86a3fe",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Camera",
+                    "action": "DeltaMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a16be0e8-7a3a-49ca-a577-8cf3a34e4ce0",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Camera",
+                    "action": "DeltaMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "676f4f04-8f73-4e83-9167-c59cc44853f7",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoomMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "52029c49-934c-4752-95ba-25d51e5e4460",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Camera",
+                    "action": "StartDeltaDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5eff016e-af68-44e2-bb47-cf7fc04321a4",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Camera",
+                    "action": "StartDeltaDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Camera",
+            "bindingGroup": "Camera",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Touchscreen>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
