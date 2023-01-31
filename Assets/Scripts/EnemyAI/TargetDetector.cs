@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TargetDetector : Detector
 {
-    [SerializeField] private float targetrDetectionRange = 5;
+    [SerializeField] private float targetDetectionRange = 40;
 
     [SerializeField] private LayerMask obstacleLayerMask, playerLayerMask;
 
@@ -15,17 +15,22 @@ public class TargetDetector : Detector
 
     public override void Detect(AIData aiData)
     {
-        Collider2D playerCollider = 
-            Physics2D.OverlapCircle(transform.position, targetrDetectionRange, playerLayerMask);
-        if(playerCollider != null)
+        //Find out if player is near
+        Collider2D playerCollider =
+            Physics2D.OverlapCircle(transform.position, targetDetectionRange, playerLayerMask);
+
+        if (playerCollider != null)
         {
+            //Check if you see the player
             Vector2 direction = (playerCollider.transform.position - transform.position).normalized;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, targetrDetectionRange, obstacleLayerMask);
-        
-            if(hit.collider != null && (playerLayerMask & (1 << hit.collider.gameObject.layer)) != 0)
+            RaycastHit2D hit =
+                Physics2D.Raycast(transform.position, direction, targetDetectionRange, obstacleLayerMask);
+
+            //Make sure that the collider we see is on the "Player" layer
+            if (hit.collider != null && (playerLayerMask & (1 << hit.collider.gameObject.layer)) != 0)
             {
-                Debug.DrawRay(transform.position, direction * targetrDetectionRange, Color.magenta);
-                colliders = new List<Transform> { playerCollider.transform };
+                Debug.DrawRay(transform.position, direction * targetDetectionRange, Color.magenta);
+                colliders = new List<Transform>() { playerCollider.transform };
             }
             else
             {
@@ -34,6 +39,7 @@ public class TargetDetector : Detector
         }
         else
         {
+            //Enemy doesn't see the player
             colliders = null;
         }
         aiData.targets = colliders;
@@ -42,7 +48,7 @@ public class TargetDetector : Detector
     {
         if(showGizmos == false) { return; }
 
-        Gizmos.DrawWireSphere(transform.position, targetrDetectionRange);
+        Gizmos.DrawWireSphere(transform.position, targetDetectionRange);
 
         if (colliders == null) return;
         foreach(var item in colliders)

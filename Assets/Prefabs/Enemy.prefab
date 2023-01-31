@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd5719c9cd467ed49becaaf2cdcd2270, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetrDetectionRange: 40
+  targetDetectionRange: 40
   obstacleLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f638daee93fd04b93359461b44bc4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showGizmo: 1
+  showGizmos: 1
 --- !u!1 &7329113060913163557
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +291,7 @@ Transform:
   m_GameObject: {fileID: 8141061813239546528}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.81, y: 4.99, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5829239218116450524}
@@ -431,7 +431,7 @@ MonoBehaviour:
   moveDirectionSolver: {fileID: 9018451005197079221}
   follow: 0
   moveDirection: {x: 0, y: 0}
-  _speed: 30
+  _speed: 1
 --- !u!1 &8841796843716710345
 GameObject:
   m_ObjectHideFlags: 0

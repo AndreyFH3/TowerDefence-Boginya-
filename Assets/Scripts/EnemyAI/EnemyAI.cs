@@ -46,8 +46,6 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            float distance = Vector2.Distance(aiData.currentTarget.position, transform.position);
-
             moveDirection = moveDirectionSolver.GetDirectionToMove(steeringBehaviours, aiData);
             yield return new WaitForSeconds(aiUpdateDelay);
             StartCoroutine(Chase());

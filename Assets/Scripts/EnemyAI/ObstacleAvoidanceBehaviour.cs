@@ -14,11 +14,13 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
 
     public override (float[] danger, float[] interests) GetSteering(float[] danger, float[] interest, AIData aiData)
     {
-        foreach(Collider2D obstacleCollider in aiData.obstacles)
+        foreach (Collider2D obstacleCollider in aiData.obstacles)
         {
-            Vector2 directionToObstacle = obstacleCollider.ClosestPoint(transform.position) - (Vector2)transform.position;
+            Vector2 directionToObstacle
+                = obstacleCollider.ClosestPoint(transform.position) - (Vector2)transform.position;
             float distanceToObstacle = directionToObstacle.magnitude;
 
+            //calculate weight based on the distance Enemy<--->Obstacle
             float weight
                 = distanceToObstacle <= agetnColliderSize
                 ? 1
@@ -26,12 +28,15 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
 
             Vector2 directionToObstacleNormalized = directionToObstacle.normalized;
 
-            for(int i =0; i< Directions.eightDirections.Count; i++)
+            //Add obstacle parameters to the danger array
+            for (int i = 0; i < Directions.eightDirections.Count; i++)
             {
                 float result = Vector2.Dot(directionToObstacleNormalized, Directions.eightDirections[i]);
 
                 float valueToPutIn = result * weight;
-                if(valueToPutIn> danger[i])
+
+                //override value only if it is higher than the current one stored in the danger array
+                if (valueToPutIn > danger[i])
                 {
                     danger[i] = valueToPutIn;
                 }

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class ContextSolver : MonoBehaviour
 {
-    [SerializeField] private bool showGizmo = false;
+    [SerializeField]
+    private bool showGizmos = true;
 
-    private float[] interestGizmo = new float[0];
-    private Vector2 resultDirection = Vector2.zero;
+    //gozmo parameters
+    float[] interestGizmo = new float[0];
+    Vector2 resultDirection = Vector2.zero;
     private float rayLength = 2;
 
     private void Start()
@@ -20,33 +22,39 @@ public class ContextSolver : MonoBehaviour
         float[] danger = new float[8];
         float[] interest = new float[8];
 
-        foreach(SteeringBehaviour behaviour in behaviours)
+        //Loop through each behaviour
+        foreach (SteeringBehaviour behaviour in behaviours)
         {
             (danger, interest) = behaviour.GetSteering(danger, interest, aiData);
         }
 
-        for(int i =0; i < 8; i++)
+        //subtract danger values from interest array
+        for (int i = 0; i < 8; i++)
         {
             interest[i] = Mathf.Clamp01(interest[i] - danger[i]);
         }
-        
+
         interestGizmo = interest;
 
+        //get the average direction
         Vector2 outputDirection = Vector2.zero;
-        for(int i =0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             outputDirection += Directions.eightDirections[i] * interest[i];
         }
+
         outputDirection.Normalize();
 
         resultDirection = outputDirection;
 
+        //return the selected movement direction
         return resultDirection;
     }
 
+
     private void OnDrawGizmos()
     {
-        if(Application.isPlaying && showGizmo)
+        if (Application.isPlaying && showGizmos)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawRay(transform.position, resultDirection * rayLength);
