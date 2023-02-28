@@ -16,9 +16,10 @@ public class TargetDetector : Detector
     public override void Detect(AIData aiData)
     {
         //Find out if player is near
-        Collider2D playerCollider =
-            Physics2D.OverlapCircle(transform.position, targetDetectionRange, playerLayerMask);
+        Collider2D[] playersColliders =
+            Physics2D.OverlapCircleAll(transform.position, targetDetectionRange, playerLayerMask);
 
+        Collider2D playerCollider = GetNearest(playersColliders);
         if (playerCollider != null)
         {
             //Check if you see the player
@@ -56,4 +57,21 @@ public class TargetDetector : Detector
             Gizmos.DrawSphere(item.position, .3f);
         }
     }
+
+    private Collider2D GetNearest(Collider2D[] array)
+    {
+        Collider2D closest = null;
+        float distance = float.MaxValue;
+        foreach(Collider2D item in array)
+        {
+            float distanceToTower = Vector3.Distance(transform.position, item.transform.position);
+            if (distance >= distanceToTower)
+            {
+                distance = distanceToTower;
+                closest = item;
+            }
+        }
+        return closest;
+    }
+
 }

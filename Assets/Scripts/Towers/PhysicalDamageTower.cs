@@ -33,6 +33,7 @@ public class PhysicalDamageTower : Tower
     public override void Attack(Transform enemyPosition)
     {
         Bullet b = Instantiate(_bullet, transform.position, Quaternion.identity);
+        b.SetDamage(_damage);
         b.SetDestination(enemyPosition);
     }
 }

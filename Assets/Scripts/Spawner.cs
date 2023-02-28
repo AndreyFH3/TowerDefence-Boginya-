@@ -43,7 +43,6 @@ public class Spawner : MonoBehaviour
         while (true)
         {
             EnemyAI aiEnemy = Instantiate(_enemy, _points[Random.Range(0, _points.Count)], Quaternion.identity, transform);
-            aiEnemy.GetComponent<AIData>().currentTarget = _target;
             yield return wait;
         }
     }
