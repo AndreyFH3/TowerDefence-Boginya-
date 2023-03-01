@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Building))]
 public class PhysicalDamageTower : Tower
 {
     [SerializeField] private Bullet _bullet;

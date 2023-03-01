@@ -112,6 +112,76 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Building"",
+            ""id"": ""ac1c2209-60ed-4219-8f2f-9e84737a105c"",
+            ""actions"": [
+                {
+                    ""name"": ""Build"",
+                    ""type"": ""Button"",
+                    ""id"": ""fe10b50d-9399-403b-825e-cefa1b37fc66"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SetPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""8409acc3-5ac9-4db1-80d0-d5d3cd9adcf6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""39935a8c-8f63-4836-b13a-c4cec7db8a0f"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4ed5e92-eabf-4057-98ca-bfb1980e2e9c"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""26be0a51-3002-4122-a8e6-9498f1973e39"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d6991d09-39ef-401d-8370-df493bc09fad"",
+                    ""path"": ""<Touchscreen>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -138,6 +208,10 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         m_Movement_DeltaMove = m_Movement.FindAction("DeltaMove", throwIfNotFound: true);
         m_Movement_ZoomMouse = m_Movement.FindAction("ZoomMouse", throwIfNotFound: true);
         m_Movement_StartDeltaDrag = m_Movement.FindAction("StartDeltaDrag", throwIfNotFound: true);
+        // Building
+        m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
+        m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
+        m_Building_SetPosition = m_Building.FindAction("SetPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -257,6 +331,60 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         }
     }
     public MovementActions @Movement => new MovementActions(this);
+
+    // Building
+    private readonly InputActionMap m_Building;
+    private List<IBuildingActions> m_BuildingActionsCallbackInterfaces = new List<IBuildingActions>();
+    private readonly InputAction m_Building_Build;
+    private readonly InputAction m_Building_SetPosition;
+    public struct BuildingActions
+    {
+        private @CameraControlScheme m_Wrapper;
+        public BuildingActions(@CameraControlScheme wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Build => m_Wrapper.m_Building_Build;
+        public InputAction @SetPosition => m_Wrapper.m_Building_SetPosition;
+        public InputActionMap Get() { return m_Wrapper.m_Building; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(BuildingActions set) { return set.Get(); }
+        public void AddCallbacks(IBuildingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_BuildingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BuildingActionsCallbackInterfaces.Add(instance);
+            @Build.started += instance.OnBuild;
+            @Build.performed += instance.OnBuild;
+            @Build.canceled += instance.OnBuild;
+            @SetPosition.started += instance.OnSetPosition;
+            @SetPosition.performed += instance.OnSetPosition;
+            @SetPosition.canceled += instance.OnSetPosition;
+        }
+
+        private void UnregisterCallbacks(IBuildingActions instance)
+        {
+            @Build.started -= instance.OnBuild;
+            @Build.performed -= instance.OnBuild;
+            @Build.canceled -= instance.OnBuild;
+            @SetPosition.started -= instance.OnSetPosition;
+            @SetPosition.performed -= instance.OnSetPosition;
+            @SetPosition.canceled -= instance.OnSetPosition;
+        }
+
+        public void RemoveCallbacks(IBuildingActions instance)
+        {
+            if (m_Wrapper.m_BuildingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IBuildingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_BuildingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_BuildingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public BuildingActions @Building => new BuildingActions(this);
     private int m_CameraSchemeIndex = -1;
     public InputControlScheme CameraScheme
     {
@@ -271,5 +399,10 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         void OnDeltaMove(InputAction.CallbackContext context);
         void OnZoomMouse(InputAction.CallbackContext context);
         void OnStartDeltaDrag(InputAction.CallbackContext context);
+    }
+    public interface IBuildingActions
+    {
+        void OnBuild(InputAction.CallbackContext context);
+        void OnSetPosition(InputAction.CallbackContext context);
     }
 }

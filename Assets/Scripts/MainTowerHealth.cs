@@ -9,12 +9,13 @@ public class MainTowerHealth : Health , IRepairable
 {
     [SerializeField] private TextMeshProUGUI _healthText;
     [SerializeField] private Slider _healthSlider;
+    [SerializeField] private Canvas onDeadShow;
    
     private void Awake()
     {
         _animator = GetComponent<Animator>();    
         _animator.SetInteger("Condition", HealthCurrent/_maxHealth);
-        _healthText.text = $"TowerHP: {HealthCurrent}";
+        _healthText.text = $"{HealthCurrent}/{_maxHealth}";
         HealthCurrent = _maxHealth;
         _healthSlider.maxValue = _maxHealth;
         _healthSlider.value = _maxHealth;
@@ -47,9 +48,7 @@ public class MainTowerHealth : Health , IRepairable
 
     public override void OnDead()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //по хорошему - сделать меню проигрыша с информаированием о том, что да как
-        //добавить на процессе создания UI
+        onDeadShow.gameObject.SetActive(true);
     }
 
     public void Repair()

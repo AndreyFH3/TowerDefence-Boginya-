@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class EnemyHealth : Health
 {
-    [SerializeField] private DamageType enemyType;
-    public DamageType GetEnemyType { get => enemyType; }
+    private void Awake()
+    {
+        HealthCurrent = _maxHealth;    
+    }
+
     public override void GetDamage(int damage)
     {
         HealthCurrent -= damage;
@@ -21,6 +24,7 @@ public class EnemyHealth : Health
         if(TryGetComponent(out EnemyAI e))
         {
             e.enabled = false;
+            Destroy(gameObject);
             //GetComponent<Animator>().SetTrigger("Dead"); анимация смерти
             //Выключение функции атаки
         }

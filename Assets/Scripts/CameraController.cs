@@ -18,23 +18,30 @@ public class CameraController : MonoBehaviour
     private CameraControlScheme controller;
     private bool isMoving = false;
     private Camera gameCamera;
+    public CameraControlScheme GetController { 
+        get 
+        { 
+            if(controller == null)
+                controller = new CameraControlScheme();
+            return controller; 
+        } 
+    }
 
     private void Awake()
     {
         gameCamera = GetComponent<Camera>();
-        controller = new CameraControlScheme();
-        controller.Movement.StartDeltaDrag.performed  += _ => isMoving = true;
-        controller.Movement.StartDeltaDrag.canceled  += _ => isMoving = false;
+        GetController.Movement.StartDeltaDrag.performed  += _ => isMoving = true;
+        GetController.Movement.StartDeltaDrag.canceled  += _ => isMoving = false;
     }
 
     private void OnEnable()
     {
-        controller.Enable();
+        GetController.Enable();
     }
 
     private void OnDisable()
     {
-        controller.Disable();
+        GetController.Disable();
     }
 
     private void Update()
@@ -45,7 +52,7 @@ public class CameraController : MonoBehaviour
 
     private void Zoom()
     {
-        float delta = Clamper101(-controller.Movement.ZoomMouse.ReadValue<float>());
+        float delta = Clamper101(-GetController.Movement.ZoomMouse.ReadValue<float>());
         //if (delta < minZoom)
         if(delta == 0) return;
         else if(maxZoom >= gameCamera.orthographicSize + delta && gameCamera.orthographicSize + delta >= minZoom)
@@ -64,7 +71,7 @@ public class CameraController : MonoBehaviour
     {
         if (isMoving)
         {
-            Vector2 moveDirection = controller.Movement.DeltaMove.ReadValue<Vector2>().normalized * (-moveSpeed * Time.deltaTime);
+            Vector2 moveDirection = GetController.Movement.DeltaMove.ReadValue<Vector2>().normalized * (-moveSpeed * Time.deltaTime);
             if(moveDirection.magnitude == 0) return ;
                transform.Translate(moveDirection);
 

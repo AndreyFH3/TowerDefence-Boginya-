@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-
 public static class CombatEngine
 {
     private static float maxDamage = 2.0f;
     private static float midDamage = .5f;
     private static float minDamage = .25f;
     
-    public static void DamageObject(Bullet bullet, EnemyHealth enemy)
+    public static void DamageObject<T>(this Bullet bullet, T enemy) where T : Health
     {
+        if(enemy is MainTowerHealth)
+        {
+            enemy.GetDamage(bullet.Damage);
+            return;
+        }
+
         switch (bullet.GetDamageType)
         {
             case DamageType.Electricity:
@@ -28,7 +29,7 @@ public static class CombatEngine
         }
     }
     
-    private static void ElectricityDamage(this EnemyHealth enemy, int damage)
+    private static void ElectricityDamage<T>(this T enemy, int damage) where T : Health
     {
         switch (enemy.GetEnemyType)
         {
@@ -47,7 +48,7 @@ public static class CombatEngine
         }
     }
     
-    private static void PhysicalDamage(this EnemyHealth enemy, int damage)
+    private static void PhysicalDamage<T>(this T enemy, int damage) where T : Health
     {
         switch (enemy.GetEnemyType)
         {
@@ -66,7 +67,7 @@ public static class CombatEngine
         }
     }
 
-    private static void FireDamage(this EnemyHealth enemy, int damage)
+    private static void FireDamage<T>(this T enemy, int damage) where T : Health
     {
         switch (enemy.GetEnemyType)
         {
@@ -85,7 +86,7 @@ public static class CombatEngine
         }
     }
 
-    private static void WaterDamage(this EnemyHealth enemy, int damage)
+    private static void WaterDamage<T>(this T enemy, int damage) where T : Health
     {
         switch (enemy.GetEnemyType)
         {

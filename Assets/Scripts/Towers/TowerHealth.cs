@@ -6,9 +6,10 @@ public class TowerHealth : Health, IRepairable
 {
     public bool IsBroken { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
+        HealthCurrent = _maxHealth;
     }
 
     public override void GetDamage(int damage)

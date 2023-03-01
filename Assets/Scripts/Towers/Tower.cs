@@ -46,7 +46,7 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
-            float tempDistance = Vector3.Distance(col.transform.position, _mainTowerTrnaform.position);
+            float tempDistance = Vector3.Distance(col.transform.position, transform.position);
             if (distance > tempDistance)
             {
                 distance = tempDistance;
@@ -63,7 +63,7 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
-            float tempDistance = Vector3.Distance(col.transform.position, _mainTowerTrnaform.position);
+            float tempDistance = Vector3.Distance(col.transform.position, transform.position);
             if (distance < tempDistance)
             {
                 distance = tempDistance;

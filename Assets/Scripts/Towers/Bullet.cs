@@ -17,11 +17,8 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         if(destination == null)
-
         {
-            transform.position = Vector2.MoveTowards(transform.position, transform.position + transform.TransformDirection(Vector2.up), _speed / 2 * Time.deltaTime);
-            time += Time.deltaTime;
-            if(time>= timeDead) Destroy(gameObject);
+            Destroy(gameObject);
         }
         else
         {
@@ -43,7 +40,7 @@ public class Bullet : MonoBehaviour
     {
         if (collision.transform.TryGetComponent(out EnemyHealth health))
         {
-            health.GetDamage(Damage);
+            CombatEngine.DamageObject(this, health);
             Destroy(gameObject);
         }
     }
