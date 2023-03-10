@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -16,6 +17,10 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private Vector2 moveDirection;
     [SerializeField] private float _speed = 3;
 
+    //MAKE ENEMY GREAT AGAIN  - переделать это...
+    [SerializeField] private Bullet b;
+
+    
     private void Start()
     {
         InvokeRepeating(nameof(PerformDetection), 0 ,detectorDelay);
@@ -59,5 +64,19 @@ public class EnemyAI : MonoBehaviour
         {
             detector.Detect(aiData);
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.transform.TryGetComponent(out Health health))
+        {
+            Bullet bullet = Instantiate(b);
+            bullet.SetDamage(1);
+            bullet.SetType(GetComponent<EnemyHealth>().GetDamageType);
+            CombatEngine.DamageObject(bullet, health);
+            Destroy(bullet.gameObject);
+            Destroy(gameObject);
+        }
+
     }
 }

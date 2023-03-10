@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainTowerHealth : Health , IRepairable
+public class MainTowerHealth : Health, IRepairable
 {
     [SerializeField] private TextMeshProUGUI _healthText;
     [SerializeField] private Slider _healthSlider;
@@ -14,9 +14,9 @@ public class MainTowerHealth : Health , IRepairable
     private void Awake()
     {
         _animator = GetComponent<Animator>();    
+        HealthCurrent = _maxHealth;
         _animator.SetInteger("Condition", HealthCurrent/_maxHealth);
         _healthText.text = $"{HealthCurrent}/{_maxHealth}";
-        HealthCurrent = _maxHealth;
         _healthSlider.maxValue = _maxHealth;
         _healthSlider.value = _maxHealth;
     }
@@ -37,7 +37,7 @@ public class MainTowerHealth : Health , IRepairable
         
         _healthSlider.value = HealthCurrent;
         _animator.SetFloat("Condition", HealthCurrent/_maxHealth);
-        _healthText.text = $"{HealthCurrent}";
+        _healthText.text = $"{HealthCurrent}/{_maxHealth}";
     }
 
     public override void Heal(int hp)

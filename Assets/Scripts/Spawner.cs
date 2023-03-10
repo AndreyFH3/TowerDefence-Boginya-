@@ -1,51 +1,77 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private int _maxWave = 0;
     [SerializeField] private float _timeToSpawn = 1f;
-    [SerializeField] private EnemyAI _enemy;
-
-    [SerializeField] private Transform _target;
+    [SerializeField] private List<EnemyAI> _enemy;
+    [SerializeField, Range(10, 100)] private int timeBtwWaves;
 
     [SerializeField] private Transform _pointsList;
     private List<Vector3> _points = new List<Vector3>();
+    [SerializeField] private int[] WaveSize;
 
-    private IEnumerator corutine;
+    [SerializeField] private Wallet _wallet;
 
-    private int _currentWave = 0;
-    private int _currentWaveEnemy = 0;
-
-    private Vector3 towerPosition => _target.position;
+    private int _enemiesSpawned;
+    private bool isGameEnded = false;
 
     void Start()
     {
-        foreach(Transform way in _pointsList)
+        foreach (Transform way in _pointsList)
         {
             _points.Add(way.position);
         }
-        corutine = spawn();
-        StartCoroutine(corutine);
+        StartCoroutine(SpawnWave());
     }
 
-    private void CountEnemy(int amountEnemy)
+    public int CurrentWave 
+    { 
+        get => _currentWave;
+        set
+        { 
+            _currentWave = value;
+            if (_currentWave > WaveSize.Length)
+            {
+                isGameEnded = true;
+                GameWon();
+            }
+        }
+    }
+
+    private int _currentWave = 0;
+
+    private void GameWon()
     {
-        _currentWaveEnemy = amountEnemy;
+        Debug.Log("Уровень пройден! Необходимо доделать победный канвас позже!");
     }
 
-    public void DeleteEnemy() => _currentWaveEnemy--;
-
-    private IEnumerator spawn()
+    private IEnumerator SpawnWave()
     {
         WaitForSeconds wait = new WaitForSeconds(_timeToSpawn);
-        while (true)
+        while (_enemiesSpawned < WaveSize[_currentWave])
         {
-            EnemyAI aiEnemy = Instantiate(_enemy, _points[Random.Range(0, _points.Count)], Quaternion.identity, transform);
+            if (!isGameEnded)
+            {
+                _enemiesSpawned++;
+                EnemyAI aiEnemy = Instantiate(_enemy[0], _points[Random.Range(0, _points.Count)], Quaternion.identity, transform);
+                aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(_wallet.AddMoney);
+                
+                aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(
+                    (int num) => {
+                        _enemiesSpawned--;
+                        if (_enemiesSpawned <= 0)
+                        {
+                            StartCoroutine(SpawnWave());
+                            CurrentWave++;
+                            Debug.Log($"{_currentWave} волна!");
+                        }
+                });
+            }
+
             yield return wait;
         }
     }
-    
-
 }

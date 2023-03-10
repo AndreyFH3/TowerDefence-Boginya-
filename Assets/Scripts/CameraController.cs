@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         gameCamera = GetComponent<Camera>();
-        GetController.Movement.StartDeltaDrag.performed  += _ => isMoving = true;
+        GetController.Movement.StartDeltaDrag.performed += _ => { if(!BuildSystem.IsClickOnUI()) isMoving = true; };
         GetController.Movement.StartDeltaDrag.canceled  += _ => isMoving = false;
     }
 

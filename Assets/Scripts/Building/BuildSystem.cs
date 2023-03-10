@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,11 +6,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CameraController))]
+[RequireComponent(typeof(CameraController),typeof(BuildingCreator))]
 public class BuildSystem : MonoBehaviour
 {
     [SerializeField] private Transform parentObject;
+    [SerializeField] private Wallet wallet;
     private Building currentBuilding;
+
     private bool canSetTower { get
         {
             if(currentBuilding == null)
@@ -20,21 +23,37 @@ public class BuildSystem : MonoBehaviour
     }
     private CameraControlScheme controller;
     [SerializeField] private BuildTower[] buildTower;
-
+    private BuildingCreator creator;
     //вернуть как настрою анимации на канвасе с игровым UI
     //[SerializeField] private Animator animator;
 
     private void Start()
     {
         controller = GetComponent<CameraController>().GetController;
-        controller.Building.Build.performed += _ => BuildTower();
+        controller.Building.Build.canceled += _ => BuildTower();
+        controller.Building.RemoveBuilding.performed += _ => StopBuild();
         foreach (BuildTower tower in buildTower)
         {
             tower.creatButton.onClick.AddListener(delegate
             {
-                CreateTowers(tower.tower);
+                if(currentBuilding == null)
+                    CreateTowers(tower.tower);
+                else
+                    StopBuild();
+
             });
+            creator = GetComponent<BuildingCreator>();
         }
+    }
+
+    internal void StopBuild()
+    {
+        if (currentBuilding == null)
+        {
+            return;
+        }
+        Destroy(currentBuilding.gameObject);
+        currentBuilding = null;
     }
 
     private void Update()
@@ -47,16 +66,18 @@ public class BuildSystem : MonoBehaviour
 
     private void CreateTowers(Building building)
     {
-        currentBuilding = Instantiate(building, parentObject);
+        creator.Deselect();
+        if(wallet.CanBuy(building.Price))
+            currentBuilding = Instantiate(building, parentObject);
     }
 
     private void BuildTower()
     {
-        if (IsClickOnUI())//EventSystem.current.IsPointerOverGameObject())
+        if (IsClickOnUI())
         {
             return;
         }
-        if (canSetTower)
+        if (canSetTower && wallet.Buy(currentBuilding.Price))
         {
             currentBuilding.SetTower();
             currentBuilding = null;
@@ -64,6 +85,7 @@ public class BuildSystem : MonoBehaviour
         else
         {
             //animator.SetTrigger("CantBuild");
+            Debug.Log("Тут надо анимацию, типа НЕ СТРОИЦА!!1!");
         }
     }
 

@@ -31,7 +31,7 @@ public static class CombatEngine
     
     private static void ElectricityDamage<T>(this T enemy, int damage) where T : Health
     {
-        switch (enemy.GetEnemyType)
+        switch (enemy.GetDamageType)
         {
             case DamageType.Electricity:
                 enemy.GetDamage((int)(damage * minDamage));
@@ -50,7 +50,7 @@ public static class CombatEngine
     
     private static void PhysicalDamage<T>(this T enemy, int damage) where T : Health
     {
-        switch (enemy.GetEnemyType)
+        switch (enemy.GetDamageType)
         {
             case DamageType.Electricity:
                 enemy.GetDamage(damage);
@@ -69,7 +69,7 @@ public static class CombatEngine
 
     private static void FireDamage<T>(this T enemy, int damage) where T : Health
     {
-        switch (enemy.GetEnemyType)
+        switch (enemy.GetDamageType)
         {
             case DamageType.Electricity:
                 enemy.GetDamage((int)(damage * midDamage));
@@ -88,7 +88,7 @@ public static class CombatEngine
 
     private static void WaterDamage<T>(this T enemy, int damage) where T : Health
     {
-        switch (enemy.GetEnemyType)
+        switch (enemy.GetDamageType)
         {
             case DamageType.Electricity:
                 enemy.GetDamage(damage * 2);

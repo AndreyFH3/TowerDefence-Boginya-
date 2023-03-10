@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public abstract class Health : MonoBehaviour
 {
     [SerializeField] private protected DamageType enemyType;
-    public DamageType GetEnemyType { get => enemyType; }
+    public DamageType GetDamageType { get => enemyType; }
 
 
     [SerializeField, Range(10,250)] 

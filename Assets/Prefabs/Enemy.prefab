@@ -405,6 +405,7 @@ MonoBehaviour:
   follow: 0
   moveDirection: {x: 0, y: 0}
   _speed: 1
+  b: {fileID: 3936286932737336371, guid: 9a246205bd0188e45aace83ec1e710f6, type: 3}
 --- !u!114 &-8501768797600635790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,6 +420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   _maxHealth: 35
+  priceForKill: 5
 --- !u!1 &8841796843716710345
 GameObject:
   m_ObjectHideFlags: 0

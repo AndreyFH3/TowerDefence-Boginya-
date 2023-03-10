@@ -134,6 +134,15 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RemoveBuilding"",
+                    ""type"": ""Button"",
+                    ""id"": ""4816e7cc-f328-467d-b418-2169e8523ac2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -180,6 +189,28 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
                     ""action"": ""SetPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd2c31e0-726e-43b8-94d8-983d2fcdde8a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RemoveBuilding"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb1f99a3-16eb-47c3-8311-f5734daecdf8"",
+                    ""path"": ""<Touchscreen>/touch*/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RemoveBuilding"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -212,6 +243,7 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
         m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
         m_Building_SetPosition = m_Building.FindAction("SetPosition", throwIfNotFound: true);
+        m_Building_RemoveBuilding = m_Building.FindAction("RemoveBuilding", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,12 +369,14 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
     private List<IBuildingActions> m_BuildingActionsCallbackInterfaces = new List<IBuildingActions>();
     private readonly InputAction m_Building_Build;
     private readonly InputAction m_Building_SetPosition;
+    private readonly InputAction m_Building_RemoveBuilding;
     public struct BuildingActions
     {
         private @CameraControlScheme m_Wrapper;
         public BuildingActions(@CameraControlScheme wrapper) { m_Wrapper = wrapper; }
         public InputAction @Build => m_Wrapper.m_Building_Build;
         public InputAction @SetPosition => m_Wrapper.m_Building_SetPosition;
+        public InputAction @RemoveBuilding => m_Wrapper.m_Building_RemoveBuilding;
         public InputActionMap Get() { return m_Wrapper.m_Building; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -358,6 +392,9 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
             @SetPosition.started += instance.OnSetPosition;
             @SetPosition.performed += instance.OnSetPosition;
             @SetPosition.canceled += instance.OnSetPosition;
+            @RemoveBuilding.started += instance.OnRemoveBuilding;
+            @RemoveBuilding.performed += instance.OnRemoveBuilding;
+            @RemoveBuilding.canceled += instance.OnRemoveBuilding;
         }
 
         private void UnregisterCallbacks(IBuildingActions instance)
@@ -368,6 +405,9 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
             @SetPosition.started -= instance.OnSetPosition;
             @SetPosition.performed -= instance.OnSetPosition;
             @SetPosition.canceled -= instance.OnSetPosition;
+            @RemoveBuilding.started -= instance.OnRemoveBuilding;
+            @RemoveBuilding.performed -= instance.OnRemoveBuilding;
+            @RemoveBuilding.canceled -= instance.OnRemoveBuilding;
         }
 
         public void RemoveCallbacks(IBuildingActions instance)
@@ -404,5 +444,6 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
     {
         void OnBuild(InputAction.CallbackContext context);
         void OnSetPosition(InputAction.CallbackContext context);
+        void OnRemoveBuilding(InputAction.CallbackContext context);
     }
 }

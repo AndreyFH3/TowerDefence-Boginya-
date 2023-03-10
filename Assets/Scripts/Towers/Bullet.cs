@@ -44,4 +44,6 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void SetType(DamageType type) => this.type = type;
 }

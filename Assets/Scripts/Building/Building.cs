@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Building : MonoBehaviour, IInformable
 {
     [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] private int price;
+
+    public int Price => price;
+
     public bool CanSet { private set; get; }
 
     public DataToShow GetInfo() => new DataToShow(renderer.sprite, GetComponent<TowerHealth>().HealthCurrent, name, "");
@@ -26,6 +31,7 @@ public class Building : MonoBehaviour, IInformable
     {
         GetComponent<PhysicalDamageTower>().enabled = true;
         renderer.color = Color.white;
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
