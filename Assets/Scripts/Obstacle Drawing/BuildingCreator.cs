@@ -44,8 +44,9 @@ public class BuildingCreator : MonoBehaviour
 
     private void Build()
     {
+        Debug.Log($"Grid Position:{_currentGridPosition}");
         if (BuildSystem.IsClickOnUI()) 
-        { 
+        {
             _previeMap.SetTile(_currentGridPosition, null);
         }
         else if(_setableMap.GetTile(_currentGridPosition) != null) 

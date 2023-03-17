@@ -22,16 +22,20 @@ public class TargetDetector : Detector
         Collider2D playerCollider = GetNearest(playersColliders);
         if (playerCollider != null)
         {
+            aiData.currentTarget = playerCollider.transform;
             //Check if you see the player
             Vector2 direction = (playerCollider.transform.position - transform.position).normalized;
             RaycastHit2D hit =
                 Physics2D.Raycast(transform.position, direction, targetDetectionRange, obstacleLayerMask);
 
             //Make sure that the collider we see is on the "Player" layer
-            if (hit.collider != null && (playerLayerMask & (1 << hit.collider.gameObject.layer)) != 0)
+            if (hit.collider != null )
             {
                 Debug.DrawRay(transform.position, direction * targetDetectionRange, Color.magenta);
-                colliders = new List<Transform>() { playerCollider.transform };
+                colliders = new List<Transform>()
+                { 
+                    playerCollider.transform
+                };
             }
             else
             {

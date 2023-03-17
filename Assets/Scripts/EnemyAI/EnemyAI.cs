@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private List<SteeringBehaviour> steeringBehaviours;
@@ -19,14 +20,15 @@ public class EnemyAI : MonoBehaviour
 
     //MAKE ENEMY GREAT AGAIN  - переделать это...
     [SerializeField] private Bullet b;
-
+    private Rigidbody2D rb;
     
     private void Start()
     {
         InvokeRepeating(nameof(PerformDetection), 0 ,detectorDelay);
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (aiData.currentTarget != null)
         {
@@ -37,7 +39,7 @@ public class EnemyAI : MonoBehaviour
         {
             aiData.currentTarget = aiData.targets[0];
         }
-        transform.Translate(moveDirection * (Time.deltaTime * _speed));
+        rb.MovePosition((Vector2)transform.position + moveDirection * Time.fixedDeltaTime * _speed);
     }
 
     private IEnumerator Chase()
@@ -65,6 +67,8 @@ public class EnemyAI : MonoBehaviour
             detector.Detect(aiData);
         }
     }
+
+    public void SetTarget(Transform target) => aiData.currentTarget = target;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

@@ -6,7 +6,7 @@ using UnityEngine.Jobs;
 
 public class ObstacleAvoidanceBehaviour : SteeringBehaviour
 {
-    [SerializeField] private float radius = 2f, agetnColliderSize = 0.6f;
+    [SerializeField] private float radius = 2f, agentColliderSize = 0.6f;
 
     [SerializeField] private bool showGizmo = false;
 
@@ -22,7 +22,7 @@ public class ObstacleAvoidanceBehaviour : SteeringBehaviour
 
             //calculate weight based on the distance Enemy<--->Obstacle
             float weight
-                = distanceToObstacle <= agetnColliderSize
+                = distanceToObstacle <= agentColliderSize
                 ? 1
                 : (radius - distanceToObstacle) / radius;
 

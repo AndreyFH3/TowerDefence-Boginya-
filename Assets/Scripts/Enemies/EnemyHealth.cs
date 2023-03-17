@@ -12,12 +12,12 @@ public class EnemyHealth : Health
 
     public void RegisterEvent(onDeathEvent action)
     {
-        onDeath = action; 
+        onDeath += action; 
     }
 
     public void UnregisterEvent()
     {
-        onDeath = null;
+        onDeath -= null;
     }
 
     private void Awake()

@@ -57,6 +57,7 @@ public class Spawner : MonoBehaviour
             {
                 _enemiesSpawned++;
                 EnemyAI aiEnemy = Instantiate(_enemy[0], _points[Random.Range(0, _points.Count)], Quaternion.identity, transform);
+                
                 aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(_wallet.AddMoney);
                 
                 aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(
