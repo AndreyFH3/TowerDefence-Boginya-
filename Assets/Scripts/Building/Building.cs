@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 
-public class Building : MonoBehaviour, IInformable
+public class Building : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private int price;
@@ -11,8 +12,6 @@ public class Building : MonoBehaviour, IInformable
     public int Price => price;
 
     public bool CanSet { private set; get; }
-
-    public DataToShow GetInfo() => new DataToShow(renderer.sprite, GetComponent<TowerHealth>().HealthCurrent, name, "");
 
     private void Awake()
     {

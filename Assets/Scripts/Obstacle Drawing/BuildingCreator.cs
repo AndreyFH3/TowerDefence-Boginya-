@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(CameraController), typeof(BuildSystem))]
-public class BuildingCreator : MonoBehaviour
+public class BuildingCreator : BuildS, IBuildable
 {
     [SerializeField] private Tilemap _previeMap;
     [SerializeField] private Tilemap _setableMap;
-    private TileBase _tileBase { 
+
+    public override bool IsSelected { get => _item != null; }
+    private TileBase TileBase { 
         get 
         { 
             if (_item == null) 
@@ -28,46 +28,46 @@ public class BuildingCreator : MonoBehaviour
 
     private Camera _camera;
 
-    public bool IsTileSelected => _item != null;
     public BuildingObectbase GetSelectedObstacle => _item;
-    private BuildSystem buildSystem;
 
     private void Start()
     {
         _camera = Camera.main;
         _controller = GetComponent<CameraController>().GetController;
 
-        _controller.Building.Build.performed += _ => Build();
 
-        buildSystem = GetComponent<BuildSystem>();
+        //buildSystem = GetComponent<BuildSystem>();
     }
 
-    private void Build()
+    public override void Build()
     {
-        Debug.Log($"Grid Position:{_currentGridPosition}");
         if (BuildSystem.IsClickOnUI()) 
         {
-            _previeMap.SetTile(_currentGridPosition, null);
+            StopBuild();
         }
         else if(_setableMap.GetTile(_currentGridPosition) != null) 
         { 
             _previeMap.SetTile(_currentGridPosition, null);
         }
         else
-            _setableMap.SetTile(_currentGridPosition, _tileBase);
+            _setableMap.SetTile(_currentGridPosition, TileBase);
 
     }
 
-    public void SelectObject(BuildingObectbase obj)
+    public override void Select(object obj)
     {
-        _item = obj;
-        buildSystem.StopBuild();
+        if (obj is BuildingObectbase o)
+        {
+            _item = o;
+            //buildSystem.StopBuild();
+        }
     }
 
-    public void Deselect()
+    public override void StopBuild()
     {
-        _item = null;
         _previeMap.SetTile(_lastGridPosition, null);
+        _previeMap.SetTile(_currentGridPosition, null);
+        _item = null;
     }
 
     private void Update()
@@ -91,6 +91,12 @@ public class BuildingCreator : MonoBehaviour
     private void UpdatePreview()
     {
         _previeMap.SetTile(_lastGridPosition, null);
-        _previeMap.SetTile(_currentGridPosition, _tileBase);
+        _previeMap.SetTile(_currentGridPosition, TileBase);
     }
+
+    public void Deselect()
+    {
+        StopBuild();
+    }
+
 }

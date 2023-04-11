@@ -7,8 +7,6 @@ public class Bullet : MonoBehaviour
 {
     private Transform destination;
     [SerializeField] private float _speed;
-    private float time = 0;
-    private float timeDead = 3;
     [SerializeField] private DamageType type;
     internal DamageType GetDamageType { get => type; }
     private int _damage;

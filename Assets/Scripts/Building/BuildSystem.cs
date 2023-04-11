@@ -1,19 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CameraController),typeof(BuildingCreator))]
-public class BuildSystem : MonoBehaviour
+public class BuildSystem : BuildS, IBuildable
 {
     [SerializeField] private Transform parentObject;
     [SerializeField] private Wallet wallet;
     private Building currentBuilding;
+    public override bool IsSelected { get => currentBuilding != null; }
 
-    private bool canSetTower { get
+    private bool CanSetTower { get
         {
             if(currentBuilding == null)
                 return false;
@@ -30,14 +29,12 @@ public class BuildSystem : MonoBehaviour
     private void Start()
     {
         controller = GetComponent<CameraController>().GetController;
-        controller.Building.Build.canceled += _ => BuildTower();
-        controller.Building.RemoveBuilding.performed += _ => StopBuild();
         foreach (BuildTower tower in buildTower)
         {
             tower.creatButton.onClick.AddListener(delegate
             {
                 if(currentBuilding == null)
-                    CreateTowers(tower.tower);
+                    Select(tower.tower);
                 else
                     StopBuild();
 
@@ -45,8 +42,17 @@ public class BuildSystem : MonoBehaviour
             creator = GetComponent<BuildingCreator>();
         }
     }
+    public override void Select(object objectToCreate)
+    {
+        if(objectToCreate is Building building)
+        {
+            creator.StopBuild();
+            if(wallet.CanBuy(building.Price))
+                currentBuilding = Instantiate(building, parentObject);
+        }
+    }
 
-    internal void StopBuild()
+    public override void StopBuild()
     {
         if (currentBuilding == null)
         {
@@ -64,20 +70,13 @@ public class BuildSystem : MonoBehaviour
         currentBuilding.transform.position = position; 
     }
 
-    private void CreateTowers(Building building)
-    {
-        creator.Deselect();
-        if(wallet.CanBuy(building.Price))
-            currentBuilding = Instantiate(building, parentObject);
-    }
-
-    private void BuildTower()
+    public override void Build()
     {
         if (IsClickOnUI())
         {
             return;
         }
-        if (canSetTower && wallet.Buy(currentBuilding.Price))
+        if (CanSetTower && wallet.Buy(currentBuilding.Price))
         {
             currentBuilding.SetTower();
             currentBuilding = null;

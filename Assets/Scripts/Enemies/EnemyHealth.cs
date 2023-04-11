@@ -35,16 +35,23 @@ public class EnemyHealth : Health
         HealthCurrent += hp;
     }
 
+    public override DataToShow GetInfo()
+    {
+        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        return dts;
+    }
+
     public override void OnDead()
     {
-        if(TryGetComponent(out EnemyAI e))
+        if(TryGetComponent(out Agent2D e))
         {
+            e.DisableAgent();
             e.enabled = false;
             onDeath?.Invoke(priceForKill);
-            Destroy(gameObject);
-            //GetComponent<Animator>().SetTrigger("Dead"); анимация смерти
-            //Выключение функции атаки
+            GetComponent<Animator>().SetTrigger("Dead");
         }
     }
-    //public void PlayDestroyAimation() => Destroy(gameobject);
+
+
+    public void PlayDestroyAimation() => Destroy(gameObject);
 }

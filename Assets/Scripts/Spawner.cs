@@ -6,7 +6,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private float _timeToSpawn = 1f;
-    [SerializeField] private List<EnemyAI> _enemy;
+    [SerializeField] private List<Agent2D> _enemy;
     [SerializeField, Range(10, 100)] private int timeBtwWaves;
 
     [SerializeField] private Transform _pointsList;
@@ -17,6 +17,7 @@ public class Spawner : MonoBehaviour
 
     private int _enemiesSpawned;
     private bool isGameEnded = false;
+    [SerializeField] public Canvas winCanvas;
 
     void Start()
     {
@@ -25,6 +26,8 @@ public class Spawner : MonoBehaviour
             _points.Add(way.position);
         }
         StartCoroutine(SpawnWave());
+        
+        winCanvas.gameObject.SetActive(!true);
     }
 
     public int CurrentWave 
@@ -36,16 +39,16 @@ public class Spawner : MonoBehaviour
             if (_currentWave > WaveSize.Length)
             {
                 isGameEnded = true;
-                GameWon();
             }
         }
     }
+
 
     private int _currentWave = 0;
 
     private void GameWon()
     {
-        Debug.Log("Уровень пройден! Необходимо доделать победный канвас позже!");
+        winCanvas.gameObject.SetActive(true);
     }
 
     private IEnumerator SpawnWave()
@@ -53,26 +56,34 @@ public class Spawner : MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(_timeToSpawn);
         while (_enemiesSpawned < WaveSize[_currentWave])
         {
-            if (!isGameEnded)
             {
                 _enemiesSpawned++;
-                EnemyAI aiEnemy = Instantiate(_enemy[0], _points[Random.Range(0, _points.Count)], Quaternion.identity, transform);
-                
+                Agent2D aiEnemy = Instantiate(_enemy[Random.Range(0, _enemy.Count)], _points[Random.Range(0, _points.Count)], Quaternion.identity, transform);
+
                 aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(_wallet.AddMoney);
-                
+
                 aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(
-                    (int num) => {
+                    (int num) =>
+                    {
                         _enemiesSpawned--;
                         if (_enemiesSpawned <= 0)
                         {
-                            StartCoroutine(SpawnWave());
-                            CurrentWave++;
-                            Debug.Log($"{_currentWave} волна!");
-                        }
-                });
-            }
+                            if (_currentWave >= WaveSize.Length)
+                            {
+                                GameWon();
+                            }
+                            else
+                            {
+                                StartCoroutine(SpawnWave());
+                                CurrentWave++;
+                                Debug.Log($"{_currentWave} волна!");
+                            }
 
-            yield return wait;
+                        }
+                    });
+
+                yield return wait;
+            }
         }
     }
 }

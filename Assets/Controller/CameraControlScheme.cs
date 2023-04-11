@@ -53,6 +53,15 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PositionMouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""41ff50c0-2200-4bb1-a72f-0ecb724b8b05"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -108,6 +117,28 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Camera"",
                     ""action"": ""StartDeltaDrag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8b5601f-5c48-4624-abdd-0d465f101885"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PositionMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fcaf65d5-d27f-49fb-b655-51b77da61d8b"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PositionMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -239,6 +270,7 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         m_Movement_DeltaMove = m_Movement.FindAction("DeltaMove", throwIfNotFound: true);
         m_Movement_ZoomMouse = m_Movement.FindAction("ZoomMouse", throwIfNotFound: true);
         m_Movement_StartDeltaDrag = m_Movement.FindAction("StartDeltaDrag", throwIfNotFound: true);
+        m_Movement_PositionMouse = m_Movement.FindAction("PositionMouse", throwIfNotFound: true);
         // Building
         m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
         m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
@@ -308,6 +340,7 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_DeltaMove;
     private readonly InputAction m_Movement_ZoomMouse;
     private readonly InputAction m_Movement_StartDeltaDrag;
+    private readonly InputAction m_Movement_PositionMouse;
     public struct MovementActions
     {
         private @CameraControlScheme m_Wrapper;
@@ -315,6 +348,7 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         public InputAction @DeltaMove => m_Wrapper.m_Movement_DeltaMove;
         public InputAction @ZoomMouse => m_Wrapper.m_Movement_ZoomMouse;
         public InputAction @StartDeltaDrag => m_Wrapper.m_Movement_StartDeltaDrag;
+        public InputAction @PositionMouse => m_Wrapper.m_Movement_PositionMouse;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -333,6 +367,9 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
             @StartDeltaDrag.started += instance.OnStartDeltaDrag;
             @StartDeltaDrag.performed += instance.OnStartDeltaDrag;
             @StartDeltaDrag.canceled += instance.OnStartDeltaDrag;
+            @PositionMouse.started += instance.OnPositionMouse;
+            @PositionMouse.performed += instance.OnPositionMouse;
+            @PositionMouse.canceled += instance.OnPositionMouse;
         }
 
         private void UnregisterCallbacks(IMovementActions instance)
@@ -346,6 +383,9 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
             @StartDeltaDrag.started -= instance.OnStartDeltaDrag;
             @StartDeltaDrag.performed -= instance.OnStartDeltaDrag;
             @StartDeltaDrag.canceled -= instance.OnStartDeltaDrag;
+            @PositionMouse.started -= instance.OnPositionMouse;
+            @PositionMouse.performed -= instance.OnPositionMouse;
+            @PositionMouse.canceled -= instance.OnPositionMouse;
         }
 
         public void RemoveCallbacks(IMovementActions instance)
@@ -439,6 +479,7 @@ public partial class @CameraControlScheme: IInputActionCollection2, IDisposable
         void OnDeltaMove(InputAction.CallbackContext context);
         void OnZoomMouse(InputAction.CallbackContext context);
         void OnStartDeltaDrag(InputAction.CallbackContext context);
+        void OnPositionMouse(InputAction.CallbackContext context);
     }
     public interface IBuildingActions
     {

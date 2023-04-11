@@ -17,11 +17,11 @@ public class BuildingButtonHandler : MonoBehaviour
     {
         if (creator.GetSelectedObstacle != item)
         {
-            creator.SelectObject(item);
+            creator.Select(item);
         }
-        else if (creator.IsTileSelected)
+        else if (creator.IsSelected)
         {
-            creator.Deselect();
+            creator.StopBuild();
         }
     }
 }

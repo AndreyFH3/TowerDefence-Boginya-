@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Health : MonoBehaviour
+public abstract class Health : MonoBehaviour, IInformable
 {
     [SerializeField] private protected DamageType enemyType;
     public DamageType GetDamageType { get => enemyType; }
@@ -33,4 +33,5 @@ public abstract class Health : MonoBehaviour
 
     public abstract void OnDead();
 
+    public abstract DataToShow GetInfo();
 }

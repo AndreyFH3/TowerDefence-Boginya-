@@ -1,6 +1,8 @@
+using NavMeshPlus.Components;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.AI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,7 +24,7 @@ public class ObstacleGenerator : MonoBehaviour
     [SerializeField] private Tilemap obstacleMap;
     [SerializeField] private BuildingObectbase _forestObstacle;
     [SerializeField] private BuildingObectbase _riverObstacle;
-
+    [SerializeField] private NavMeshSurface Surface2D;
 
     private Vector3Int[] directions = {
         new Vector3Int(-1,-1,0),
@@ -40,6 +42,9 @@ public class ObstacleGenerator : MonoBehaviour
     {
         GenerateObstacle(obstacleMap, _forestObstacle, _forestsAmount, forestMaxSize);
         GenerateObstacle(obstacleMap, _riverObstacle, _riversAmount, riverMaxSize, true);
+
+        //==========================
+        Surface2D.UpdateNavMesh(Surface2D.navMeshData);
     }
 
     private void GenerateObstacle(Tilemap tilemap, BuildingObectbase obstacle,int amount = 1, int size = 1,bool straight = false)

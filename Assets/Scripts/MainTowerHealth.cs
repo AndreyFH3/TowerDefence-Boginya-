@@ -56,4 +56,11 @@ public class MainTowerHealth : Health, IRepairable
         //some Code To Reapir Tower
         //Add after creating UI and Earn System
     }
+
+    public override DataToShow GetInfo()
+    {
+        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        return dts;
+    }
+
 }
