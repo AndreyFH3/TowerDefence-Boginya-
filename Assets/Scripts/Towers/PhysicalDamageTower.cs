@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Building))]
 public class PhysicalDamageTower : Tower
 {
     [SerializeField] private Bullet _bullet;
@@ -33,6 +34,7 @@ public class PhysicalDamageTower : Tower
     public override void Attack(Transform enemyPosition)
     {
         Bullet b = Instantiate(_bullet, transform.position, Quaternion.identity);
+        b.SetDamage(_damage);
         b.SetDestination(enemyPosition);
     }
 }

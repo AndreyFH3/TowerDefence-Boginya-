@@ -16,21 +16,26 @@ public class TargetDetector : Detector
     public override void Detect(AIData aiData)
     {
         //Find out if player is near
-        Collider2D playerCollider =
-            Physics2D.OverlapCircle(transform.position, targetDetectionRange, playerLayerMask);
+        Collider2D[] playersColliders =
+            Physics2D.OverlapCircleAll(transform.position, targetDetectionRange, playerLayerMask);
 
+        Collider2D playerCollider = GetNearest(playersColliders);
         if (playerCollider != null)
         {
+            aiData.currentTarget = playerCollider.transform;
             //Check if you see the player
             Vector2 direction = (playerCollider.transform.position - transform.position).normalized;
             RaycastHit2D hit =
                 Physics2D.Raycast(transform.position, direction, targetDetectionRange, obstacleLayerMask);
 
             //Make sure that the collider we see is on the "Player" layer
-            if (hit.collider != null && (playerLayerMask & (1 << hit.collider.gameObject.layer)) != 0)
+            if (hit.collider != null )
             {
                 Debug.DrawRay(transform.position, direction * targetDetectionRange, Color.magenta);
-                colliders = new List<Transform>() { playerCollider.transform };
+                colliders = new List<Transform>()
+                { 
+                    playerCollider.transform
+                };
             }
             else
             {
@@ -56,4 +61,21 @@ public class TargetDetector : Detector
             Gizmos.DrawSphere(item.position, .3f);
         }
     }
+
+    private Collider2D GetNearest(Collider2D[] array)
+    {
+        Collider2D closest = null;
+        float distance = float.MaxValue;
+        foreach(Collider2D item in array)
+        {
+            float distanceToTower = Vector3.Distance(transform.position, item.transform.position);
+            if (distance >= distanceToTower)
+            {
+                distance = distanceToTower;
+                closest = item;
+            }
+        }
+        return closest;
+    }
+
 }

@@ -1,9 +1,10 @@
 using UnityEngine;
 
+public enum FindEnemyTyepe { First = 0, Last = 1, MaxHealth = 2 }
+public enum DamageType { Physical = 0, Water = 1, Fire = 2, Electricity = 3 }
 public abstract class Tower : MonoBehaviour
 {
-    enum FindEnemyTyepe { First = 0, Last = 1, MaxHealth = 2 }
-    enum DamageType{ Physical = 0, Water = 1, Fire = 2, Electricity = 3 }
+
     [Header("enemies")]
     [SerializeField] private FindEnemyTyepe _enemyType;
     [SerializeField] private protected LayerMask enemyMask;
@@ -45,7 +46,9 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
-            float tempDistance = Vector3.Distance(col.transform.position, _mainTowerTrnaform.position);
+            if (col.transform.TryGetComponent(out Health h) & h.IsDead) continue;
+
+            float tempDistance = Vector3.Distance(col.transform.position, transform.position);
             if (distance > tempDistance)
             {
                 distance = tempDistance;
@@ -62,7 +65,8 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
-            float tempDistance = Vector3.Distance(col.transform.position, _mainTowerTrnaform.position);
+            if (col.transform.TryGetComponent(out Health h) & h.IsDead) continue;
+            float tempDistance = Vector3.Distance(col.transform.position, transform.position);
             if (distance < tempDistance)
             {
                 distance = tempDistance;
@@ -79,10 +83,11 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
-            if(col.transform.TryGetComponent(out EnemyHealth health) && health.HealthCurrent > tempHealth)
+            if (col.transform.TryGetComponent(out Health h) & h.IsDead) continue;
+            if(h.HealthCurrent > tempHealth)
             {
-                tempHealth = health.HealthCurrent;
-                tempTransform = health.transform;
+                tempHealth = h.HealthCurrent;
+                tempTransform = h.transform;
             }
         }
         return tempTransform;

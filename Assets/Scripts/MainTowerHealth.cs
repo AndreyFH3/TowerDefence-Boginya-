@@ -3,39 +3,54 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class MainTowerHealth : MonoBehaviour
+public class MainTowerHealth : TowerHealth, IRepairable
 {
     [SerializeField] private TextMeshProUGUI _healthText;
-    [SerializeField] private int _health;
-    private Animator _animator;
-
+    [SerializeField] private Slider _healthSlider;
+    [SerializeField] private Canvas onDeadShow;
+   
     private void Awake()
     {
         _animator = GetComponent<Animator>();    
-        _animator.SetInteger("Condition", _health);
-        _healthText.text = $"TowerHP: {_health}";
+        HealthCurrent = _maxHealth;
+        _animator.SetInteger("Condition", HealthCurrent/_maxHealth);
+        _healthText.text = $"{HealthCurrent}/{_maxHealth}";
+        _healthSlider.maxValue = _maxHealth;
+        _healthSlider.value = _maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public override void GetDamage(int damage)
     {
-        _health -= damage;
-        _animator.SetInteger("Condition", _health);
-        _healthText.text = $"TowerHP: {_health}";
-
-        if (_health <= 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
+        HealthCurrent -= damage;
         
-        if (collision.transform.TryGetComponent(out EnemyAttack ea))
-        {
-            TakeDamage(ea.damage);
-            Destroy(ea.gameObject);
-        }
+        _healthSlider.value = HealthCurrent;
+        _animator.SetFloat("Condition", HealthCurrent/_maxHealth);
+        _healthText.text = $"{HealthCurrent}/{_maxHealth}";
     }
+
+    public override void Heal(int hp)
+    {
+        HealthCurrent += hp;
+        _healthSlider.value = HealthCurrent;
+    }
+
+    public override void OnDead()
+    {
+        onDeadShow.gameObject.SetActive(true);
+    }
+
+    public override void Repair()
+    {
+        //some Code To Reapir Tower
+        //Add after creating UI and Earn System
+    }
+
+    public override DataToShow GetInfo()
+    {
+        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        return dts;
+    }
+
 }
