@@ -46,6 +46,8 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
+            if (col.transform.TryGetComponent(out Health h) & h.IsDead) continue;
+
             float tempDistance = Vector3.Distance(col.transform.position, transform.position);
             if (distance > tempDistance)
             {
@@ -63,6 +65,7 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
+            if (col.transform.TryGetComponent(out Health h) & h.IsDead) continue;
             float tempDistance = Vector3.Distance(col.transform.position, transform.position);
             if (distance < tempDistance)
             {
@@ -80,10 +83,11 @@ public abstract class Tower : MonoBehaviour
 
         foreach (Collider2D col in colliders)
         {
-            if(col.transform.TryGetComponent(out EnemyHealth health) && health.HealthCurrent > tempHealth)
+            if (col.transform.TryGetComponent(out Health h) & h.IsDead) continue;
+            if(h.HealthCurrent > tempHealth)
             {
-                tempHealth = health.HealthCurrent;
-                tempTransform = health.transform;
+                tempHealth = h.HealthCurrent;
+                tempTransform = h.transform;
             }
         }
         return tempTransform;

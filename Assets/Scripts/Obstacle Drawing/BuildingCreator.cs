@@ -94,9 +94,5 @@ public class BuildingCreator : BuildS, IBuildable
         _previeMap.SetTile(_currentGridPosition, TileBase);
     }
 
-    public void Deselect()
-    {
-        StopBuild();
-    }
 
 }

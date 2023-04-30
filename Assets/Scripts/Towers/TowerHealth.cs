@@ -36,7 +36,7 @@ public class TowerHealth : Health, IRepairable
         }
     }
 
-    public void Repair()
+    public virtual void Repair()
     {
         //some Code To Reapir Tower
         //Add after creating UI and Earn System

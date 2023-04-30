@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainTowerHealth : Health, IRepairable
+public class MainTowerHealth : TowerHealth, IRepairable
 {
     [SerializeField] private TextMeshProUGUI _healthText;
     [SerializeField] private Slider _healthSlider;
@@ -19,16 +19,6 @@ public class MainTowerHealth : Health, IRepairable
         _healthText.text = $"{HealthCurrent}/{_maxHealth}";
         _healthSlider.maxValue = _maxHealth;
         _healthSlider.value = _maxHealth;
-    }
-
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.transform.TryGetComponent(out EnemyAttack ea))
-        {
-            GetDamage(ea.damage);
-            Destroy(ea.gameObject);
-        }
     }
 
     public override void GetDamage(int damage)
@@ -51,7 +41,7 @@ public class MainTowerHealth : Health, IRepairable
         onDeadShow.gameObject.SetActive(true);
     }
 
-    public void Repair()
+    public override void Repair()
     {
         //some Code To Reapir Tower
         //Add after creating UI and Earn System

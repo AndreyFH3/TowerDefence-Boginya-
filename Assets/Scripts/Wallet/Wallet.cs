@@ -37,7 +37,7 @@ public class Wallet : MonoBehaviour
 
     private void UIUpdate()
     {
-        _moneyText.text = $"Золотых: {MoneyAmount}";
+        _moneyText.text = MoneyAmount.ToString();
     }
 
     public void AddMoney(int amount)

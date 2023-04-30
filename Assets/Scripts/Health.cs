@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Health : MonoBehaviour, IInformable
+public abstract class Health : MonoBehaviour, IInformable, IDamagable
 {
     [SerializeField] private protected DamageType enemyType;
     public DamageType GetDamageType { get => enemyType; }
+    public bool IsDead { get; private protected set; } = false;
 
 
     [SerializeField, Range(10,250)] 
@@ -18,7 +20,11 @@ public abstract class Health : MonoBehaviour, IInformable
         {
             _health = value;
             if (_health <= 0)
+            {
+                if (IsDead) return;
                 OnDead();
+                IsDead = true;
+            }
             else if (_health >= _maxHealth)
                 _health = _maxHealth;
         } 

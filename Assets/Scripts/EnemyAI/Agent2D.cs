@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,8 +13,9 @@ public class Agent2D : MonoBehaviour
     private NavMeshAgent agent;
     private AttackEnemy attackEnemy;
     private Animator _animator;
+    private float DistanceToAttack;
 
-    void Start()
+    void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
@@ -26,22 +28,18 @@ public class Agent2D : MonoBehaviour
         InvokeRepeating(nameof(FindTarget), 0, seekTime);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!agent.enabled) return;
+        if (!agent.enabled && target != null) return;
 
-        if(target != null)
-            agent.SetDestination(target.position);
-        else
-            FindTarget();
+        agent.SetDestination(target.position);
         float distance = Vector3.Distance(target.position, transform.position);
-        if (distance <= 2f)
+        if (distance <= DistanceToAttack)
         {
-            //тут должна быть анимация, типа ломает и ломалась башня потом по анимационному событию
             agent.isStopped = true;
             _animator.SetTrigger("Attack");
             _animator.SetBool("IsWalking", false);
+            if (target.TryGetComponent(out Health h) && h.IsDead) FindTarget();
         }
         else
         {
@@ -54,6 +52,8 @@ public class Agent2D : MonoBehaviour
 
     public void DisableAgent() => agent.enabled = false;
 
+    public void EnableAgent() => agent.enabled = true;
+
     private void FindTarget()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 500f, playerLayerMask);
@@ -63,19 +63,19 @@ public class Agent2D : MonoBehaviour
         else
             target = colliders[0].transform;
 
-        float distance = Vector3.Distance(transform.position, target.position);
-
         foreach (Collider2D collider in colliders)
         {
-            if(target.TryGetComponent(out Health h) || distance > Vector3.Distance(transform.position, collider.transform.position) )
+            float targetDistance = Vector3.Distance(transform.position, target.position);
+            if (collider.transform.TryGetComponent(out Health h) && !h.IsDead && targetDistance > Vector3.Distance(transform.position, collider.transform.position) )
             {
-                if (h is TowerHealth health && !health.IsBroken)
-                {
-                    continue;
-                }
                 target = collider.transform;
+                DistanceToAttack = h is TowerHealth ? 4 : 2;
             }
         }
     }
-
+    private void OnDrawGizmos()
+    {
+        if(target != null)
+            Gizmos.DrawRay(transform.position, target.position-transform.position);
+    }
 }

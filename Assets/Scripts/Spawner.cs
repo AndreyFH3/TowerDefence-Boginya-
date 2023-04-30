@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -18,6 +19,7 @@ public class Spawner : MonoBehaviour
     private int _enemiesSpawned;
     private bool isGameEnded = false;
     [SerializeField] public Canvas winCanvas;
+    [SerializeField] private TextMeshProUGUI waveInfoText;
 
     void Start()
     {
@@ -35,11 +37,12 @@ public class Spawner : MonoBehaviour
         get => _currentWave;
         set
         { 
-            _currentWave = value;
-            if (_currentWave > WaveSize.Length)
+            if (_currentWave >= WaveSize.Length)
             {
                 isGameEnded = true;
             }
+            else
+                _currentWave = value;
         }
     }
 
@@ -54,7 +57,8 @@ public class Spawner : MonoBehaviour
     private IEnumerator SpawnWave()
     {
         WaitForSeconds wait = new WaitForSeconds(_timeToSpawn);
-        while (_enemiesSpawned < WaveSize[_currentWave])
+        waveInfoText.text = $"Wave: {CurrentWave} Enemies: {WaveSize[_currentWave]}";
+        while (_enemiesSpawned <= WaveSize[_currentWave])
         {
             {
                 _enemiesSpawned++;
@@ -65,18 +69,19 @@ public class Spawner : MonoBehaviour
                 aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(
                     (int num) =>
                     {
-                        _enemiesSpawned--;
-                        if (_enemiesSpawned <= 0)
+                        Spawner spwn = this;
+                        spwn._enemiesSpawned--;
+                        waveInfoText.text = $"Wave: {CurrentWave} Enemies: {spwn._enemiesSpawned}";
+                        if (spwn._enemiesSpawned <= 0)
                         {
-                            if (_currentWave >= WaveSize.Length)
+                            if (spwn._currentWave >= WaveSize.Length)
                             {
                                 GameWon();
                             }
                             else
                             {
                                 StartCoroutine(SpawnWave());
-                                CurrentWave++;
-                                Debug.Log($"{_currentWave} волна!");
+                                spwn.CurrentWave++;
                             }
 
                         }
