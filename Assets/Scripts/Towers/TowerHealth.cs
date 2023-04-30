@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class TowerHealth : Health, IRepairable
 {
     public bool IsBroken { get; private set; } = false;
-
     private void Awake()
     {
         _animator = GetComponent<Animator>();

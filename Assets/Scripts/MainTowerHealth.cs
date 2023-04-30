@@ -27,6 +27,7 @@ public class MainTowerHealth : TowerHealth, IRepairable
         
         _healthSlider.value = HealthCurrent;
         _animator.SetFloat("Condition", HealthCurrent/_maxHealth);
+        _animator.SetTrigger("Red");
         _healthText.text = $"{HealthCurrent}/{_maxHealth}";
     }
 

@@ -83,7 +83,6 @@ public class BuildSystem : BuildS, IBuildable
         }
         else
         {
-            //animator.SetTrigger("CantBuild");
             Debug.Log("Тут надо анимацию, типа НЕ СТРОИЦА!!1!");
         }
     }

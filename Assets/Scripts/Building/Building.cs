@@ -8,7 +8,7 @@ public class Building : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private int price;
-
+    private Material material;
     public int Price => price;
 
     public bool CanSet { private set; get; }
@@ -17,7 +17,7 @@ public class Building : MonoBehaviour
     {
         GetComponent<PhysicalDamageTower>().enabled = false;
         CanSet = true;
-        renderer.color = new Color(255,255,255,125);
+        material = GetComponent<SpriteRenderer>().sharedMaterial;
     }
 
     public void DestroyTowerGameObject()
@@ -31,17 +31,19 @@ public class Building : MonoBehaviour
         GetComponent<PhysicalDamageTower>().enabled = true;
         renderer.color = Color.white;
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        if (transform.TryGetComponent(out Animator animator))
+            animator.SetTrigger("Builded");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        renderer.color = new Color(255,0,0,125);
+        material.color = new Color(120,0,0, 120);
         CanSet = false;
     }
 
     private void OnCollisionExit2D(Collision2D other)
     {
-        renderer.color = new Color(255,255,255,125);
+        material.color = new Color(0,120,0,120);
         CanSet = true;
     }
 }
