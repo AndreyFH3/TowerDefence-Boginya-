@@ -9,6 +9,8 @@ public class EnemyHealth : Health
 
     [SerializeField] private int priceForKill;
     private onDeathEvent onDeath;
+    [SerializeField] private protected string Name;
+    public int Damage { private protected set; get; }
 
     public void RegisterEvent(onDeathEvent action)
     {
@@ -22,6 +24,7 @@ public class EnemyHealth : Health
 
     private void Awake()
     {
+        Damage = GetComponent<AttackEnemy>().Damage;
         HealthCurrent = _maxHealth;    
     }
 
@@ -37,7 +40,7 @@ public class EnemyHealth : Health
 
     public override DataToShow GetInfo()
     {
-        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        DataToShow dts = new (GetComponent<SpriteRenderer>().sprite, HealthCurrent, Damage, Name, enemyType.ConvertTypeObject());
         return dts;
     }
 

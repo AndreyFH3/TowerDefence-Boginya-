@@ -6,16 +6,25 @@ using UnityEngine.AI;
 public class TowerHealth : Health, IRepairable
 {
     public bool IsBroken { get; private set; } = false;
+    public bool IsSet { get; set; } = false;
+    [SerializeField] private protected string Name;
+    public int Damage { private protected set; get; }
     private void Awake()
     {
+        Damage = GetComponent<PhysicalDamageTower>().Damage;
         _animator = GetComponent<Animator>();
         HealthCurrent = _maxHealth;
+        _animator?.SetFloat("Health", (float)(HealthCurrent / _maxHealth));
+
     }
 
     public override void GetDamage(int damage)
     {
-        HealthCurrent -= damage;
-        //_animator?.SetFloat("Health", HealthCurrent/_maxHealth);
+        if (IsSet)
+        {
+            HealthCurrent -= damage;
+            _animator?.SetFloat("Health", (float)(HealthCurrent / _maxHealth));
+        }
     }
 
     public override void Heal(int hp)
@@ -43,9 +52,7 @@ public class TowerHealth : Health, IRepairable
 
     public override DataToShow GetInfo()
     {
-        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, Damage, Name, enemyType.ConvertTypeObject());
         return dts;
     }
-
-
 }

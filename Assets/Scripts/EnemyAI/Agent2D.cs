@@ -9,11 +9,11 @@ public class Agent2D : MonoBehaviour
 {
     [SerializeField, Range(.01f, 3f)] private float seekTime = .2f;
     [SerializeField] private LayerMask playerLayerMask;
+    [SerializeField] private float DistanceToAttack;
     private Transform target;
     private NavMeshAgent agent;
     private AttackEnemy attackEnemy;
     private Animator _animator;
-    private float DistanceToAttack;
 
     void Awake()
     {
@@ -30,8 +30,11 @@ public class Agent2D : MonoBehaviour
 
     void Update()
     {
-        if (!agent.enabled && target != null) return;
-
+        if (!agent.enabled && target == null)
+        {
+            FindTarget();
+            return;
+        }
         agent.SetDestination(target.position);
         float distance = Vector3.Distance(target.position, transform.position);
         if (distance <= DistanceToAttack)
@@ -65,11 +68,23 @@ public class Agent2D : MonoBehaviour
 
         foreach (Collider2D collider in colliders)
         {
-            float targetDistance = Vector3.Distance(transform.position, target.position);
+            float targetDistance = target == null ? 1000 : Vector3.Distance(transform.position, target.position);
             if (collider.transform.TryGetComponent(out Health h) && !h.IsDead && targetDistance > Vector3.Distance(transform.position, collider.transform.position) )
             {
-                target = collider.transform;
-                DistanceToAttack = h is TowerHealth ? 4 : 2;
+                if (h is TowerHealth th && th.IsSet)
+                {
+                    DistanceToAttack = 4;
+                    target = collider.transform;
+                }
+                else if(target.TryGetComponent(out Health health) && health.IsDead)
+                {
+                    target = null;
+                }
+                else
+                {
+                    DistanceToAttack = 2;
+                    target = collider.transform;
+                }
             }
         }
     }

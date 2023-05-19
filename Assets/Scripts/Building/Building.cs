@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Building : MonoBehaviour
 {
@@ -31,19 +32,25 @@ public class Building : MonoBehaviour
         GetComponent<PhysicalDamageTower>().enabled = true;
         renderer.color = Color.white;
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-        if (transform.TryGetComponent(out Animator animator))
+        GetComponent<CircleCollider2D>().isTrigger = false;
+        GetComponent<NavMeshObstacle>().enabled = true;
+        if (transform.TryGetComponent(out Animator animator) && transform.TryGetComponent(out TowerHealth h))
+        {
             animator.SetTrigger("Builded");
+            h.IsSet = true;
+        }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        material.color = new Color(120,0,0, 120);
+        material.color = new Color(120, 0, 0, 120);
         CanSet = false;
     }
 
-    private void OnCollisionExit2D(Collision2D other)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        material.color = new Color(0,120,0,120);
+        material.color = new Color(0, 120, 0, 120);
         CanSet = true;
     }
+
 }

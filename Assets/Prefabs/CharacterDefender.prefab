@@ -278,6 +278,7 @@ MonoBehaviour:
   _maxHealth: 100
   _timeToReborn: 7.5
   _rebornImage: {fileID: 5251614612176097700}
+  Name: "\u0417\u0430\u0449\u0438\u0442\u043D\u0438\u043A"
 --- !u!114 &5251614610946486032
 MonoBehaviour:
   m_ObjectHideFlags: 0

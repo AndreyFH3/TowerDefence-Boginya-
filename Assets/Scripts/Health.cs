@@ -41,3 +41,15 @@ public abstract class Health : MonoBehaviour, IInformable, IDamagable
 
     public abstract DataToShow GetInfo();
 }
+
+public static class Extencion
+{
+    public static string ConvertTypeObject(this DamageType type) => type switch
+    {
+        DamageType.Physical => "Физический",
+        DamageType.Fire => "Огненный",
+        DamageType.Water => "Водный",
+        DamageType.Electricity => "Электрический",
+        _ => "default"
+    };
+}

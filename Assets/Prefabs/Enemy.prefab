@@ -564,6 +564,7 @@ MonoBehaviour:
   enemyType: 0
   _maxHealth: 35
   priceForKill: 9
+  Name: "\u0413\u043E\u0431\u043B\u0438\u043D"
 --- !u!195 &6327483770493793331
 NavMeshAgent:
   m_ObjectHideFlags: 0

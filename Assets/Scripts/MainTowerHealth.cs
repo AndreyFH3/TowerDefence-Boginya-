@@ -13,12 +13,14 @@ public class MainTowerHealth : TowerHealth, IRepairable
    
     private void Awake()
     {
+        Damage = 0;
         _animator = GetComponent<Animator>();    
         HealthCurrent = _maxHealth;
-        _animator.SetInteger("Condition", HealthCurrent/_maxHealth);
+        _animator.SetInteger("Health", HealthCurrent/_maxHealth);
         _healthText.text = $"{HealthCurrent}/{_maxHealth}";
         _healthSlider.maxValue = _maxHealth;
         _healthSlider.value = _maxHealth;
+        IsSet = true;
     }
 
     public override void GetDamage(int damage)
@@ -26,7 +28,7 @@ public class MainTowerHealth : TowerHealth, IRepairable
         HealthCurrent -= damage;
         
         _healthSlider.value = HealthCurrent;
-        _animator.SetFloat("Condition", HealthCurrent/_maxHealth);
+        _animator.SetFloat("Health", HealthCurrent/_maxHealth);
         _animator.SetTrigger("Red");
         _healthText.text = $"{HealthCurrent}/{_maxHealth}";
     }
@@ -50,7 +52,7 @@ public class MainTowerHealth : TowerHealth, IRepairable
 
     public override DataToShow GetInfo()
     {
-        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        DataToShow dts = new (GetComponent<SpriteRenderer>().sprite, HealthCurrent, Damage, Name, enemyType.ToString());
         return dts;
     }
 

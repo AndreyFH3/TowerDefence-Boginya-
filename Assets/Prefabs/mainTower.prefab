@@ -208,6 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   _maxHealth: 55
+  Name: "\u0413\u043B\u0430\u0432\u043D\u0430\u044F \u0431\u0430\u0448\u043D\u044F"
   _healthText: {fileID: 184285877462781911}
   _healthSlider: {fileID: 184285876127012364}
   onDeadShow: {fileID: 0}
