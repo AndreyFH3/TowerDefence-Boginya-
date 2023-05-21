@@ -62026,6 +62026,10 @@ PrefabInstance:
       propertyPath: onDeadShow
       value: 
       objectReference: {fileID: 1307991548}
+    - target: {fileID: 184285875804951634, guid: 8eb641eea95d0ec4288908fd30ac83c3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 184285877335122090, guid: 8eb641eea95d0ec4288908fd30ac83c3, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
