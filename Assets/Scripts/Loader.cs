@@ -23,11 +23,19 @@ public class Loader : MonoBehaviour
 
     private void Start()
     {
-        _startButton.onClick.AddListener(
-            delegate
-            {
-                StartCoroutine(Load(_levelIndex));
-            });
+        if(_startButton != null)
+        {
+            _startButton.onClick.AddListener(
+                delegate
+                {
+                    StartCoroutine(Load(_levelIndex));
+                });
+        }
+    }
+
+    public void LoadLevel(int i)
+    {
+        StartCoroutine(Load(i));
     }
 
     private IEnumerator Load(int index)

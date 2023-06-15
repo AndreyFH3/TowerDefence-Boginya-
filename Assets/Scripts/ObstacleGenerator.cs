@@ -1,10 +1,6 @@
 using NavMeshPlus.Components;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.AI;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Tilemaps;
 
 public class ObstacleGenerator : MonoBehaviour
@@ -73,7 +69,7 @@ public class ObstacleGenerator : MonoBehaviour
                 }
                 
             }
-            NavMeshPath path = new NavMeshPath();
+            UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
             //if ()
             //{
             //    foreach (Vector3Int p in points)
