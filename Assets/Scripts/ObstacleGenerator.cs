@@ -1,8 +1,5 @@
 using NavMeshPlus.Components;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.AI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -43,19 +40,21 @@ public class ObstacleGenerator : MonoBehaviour
         GenerateObstacle(obstacleMap, _forestObstacle, _forestsAmount, forestMaxSize);
         GenerateObstacle(obstacleMap, _riverObstacle, _riversAmount, riverMaxSize, true);
 
-        //==========================
         Surface2D.UpdateNavMesh(Surface2D.navMeshData);
     }
 
-    private void GenerateObstacle(Tilemap tilemap, BuildingObectbase obstacle,int amount = 1, int size = 1,bool straight = false)
+    private void GenerateObstacle(Tilemap tilemap, BuildingObectbase obstacle,int amount = 1, int size = 1, bool straight = false)
     {
+        
         for (int i = 0; i < amount; i++)
         {
             Vector3Int startPoint = GetStartPoint();
             int direction = Random.Range(0,2);
             int rotation = Random.Range(0,2);
+            List<Vector3Int> points = new List<Vector3Int>();
             for (int j = 0; j < size; j++)
             {
+                points.Add(startPoint);
                 tilemap.SetTile(startPoint, obstacle.Tile);
 
                 if (straight)
@@ -68,14 +67,21 @@ public class ObstacleGenerator : MonoBehaviour
                 {
                     break;
                 }
+                
             }
+            UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
+            //if ()
+            //{
+            //    foreach (Vector3Int p in points)
+            //    {
+            //        tilemap.SetTile(p, null);
+            //    }
+            //}
         }
     }
 
     private Vector3Int NearBuild(Vector3Int dataVector3) =>
         dataVector3 += directions[Random.Range(0, directions.Length)];
-
-
 
     private Vector3Int StraightBuild(Vector3Int dataVctor3, int direction, int rotation)
     {

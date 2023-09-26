@@ -472,7 +472,7 @@ GameObject:
   - component: {fileID: -8436147235675123442}
   - component: {fileID: 4095407174440761929}
   m_Layer: 3
-  m_Name: Enemy
+  m_Name: EnemyWater
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -539,7 +539,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 30ac5fbe480b0f043bead85d0d01f94e, type: 3}
-  m_Color: {r: 0.6037736, g: 0.584787, b: 0.584787, a: 1}
+  m_Color: {r: 0.44581607, g: 0.43081754, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -561,9 +561,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9a68ee46aa495b4f95ad1cb6e4adba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 0
+  enemyType: 1
   _maxHealth: 35
   priceForKill: 9
+  Name: "\u0413\u043E\u0431\u043B\u0438\u043D"
 --- !u!195 &6327483770493793331
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -602,6 +603,7 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  DistanceToAttack: 0
 --- !u!95 &-5798731089812590430
 Animator:
   serializedVersion: 5

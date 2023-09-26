@@ -8,9 +8,12 @@ public class CharacterHealth : Health
 {
     [SerializeField] private float _timeToReborn = 7.5f;
     [SerializeField] private Image _rebornImage;
+    [SerializeField] private protected string Name;
+    public int Damage { private protected set; get; }
 
     private void Awake()
     {
+        Damage = GetComponent<AttackEnemy>().Damage;    
         HealthCurrent = _maxHealth;
         _rebornImage.fillAmount = _timeToReborn;
         _animator = GetComponent<Animator>();
@@ -29,7 +32,7 @@ public class CharacterHealth : Health
 
     public override DataToShow GetInfo()
     {
-        DataToShow dts = new DataToShow(GetComponent<SpriteRenderer>().sprite, HealthCurrent, 10, name, enemyType.ToString());
+        DataToShow dts = new(GetComponent<SpriteRenderer>().sprite, HealthCurrent, Damage, Name, enemyType.ConvertTypeObject());
         return dts;
     }
 
@@ -58,9 +61,12 @@ public class CharacterHealth : Health
         
         IsDead = false;
         HealthCurrent = _maxHealth;
-        
-        if(TryGetComponent(out Agent2D e))
+
+        if (TryGetComponent(out Agent2D e))
+        {
+            e.enabled = true;
             e.EnableAgent();
+        }
         GetComponent<Animator>().SetTrigger("Alive");
 
         _rebornImage.gameObject.SetActive(false);

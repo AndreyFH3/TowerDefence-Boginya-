@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
@@ -23,7 +24,15 @@ public class CameraController : MonoBehaviour
     private Informator informator;
     [SerializeField] private LayerMask infoLayerMask;
     private Vector2 movePositionStarted;
-    private Vector2 drag;
+    private IInformable informable;
+    public bool IsInfoSelected { get
+        {
+            if(informable is EnemyHealth h && h == null) 
+                return false;
+            else
+                return informable != null;
+        }
+    }
     public CameraControlScheme GetController { 
         get 
         { 
@@ -35,22 +44,26 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
+        informator = FindObjectOfType<Informator>();
         gameCamera = GetComponent<Camera>();
+        gameCamera = Camera.main;
         GetController.Movement.StartDeltaDrag.performed += _ =>
         {
-            ShowInfoInGame();
+            informable = null;
+            informator.ShowInfo(null);
+            FinInfoObjcet();
 
-            movePositionStarted = Camera.main.ScreenToWorldPoint(GetController.Movement.PositionMouse.ReadValue<Vector2>());
+            movePositionStarted = gameCamera.ScreenToWorldPoint(GetController.Movement.PositionMouse.ReadValue<Vector2>());
 
             if (!BuildSystem.IsClickOnUI())
+            {
                 isMoving = true;
-
+            }
         };
      
         GetController.Movement.StartDeltaDrag.canceled += _ =>
         {
             isMoving = false;
-            drag = Vector2.zero;
         };
     }
 
@@ -68,12 +81,17 @@ public class CameraController : MonoBehaviour
     {
         MoveCamera();
         Zoom();
+        if (IsInfoSelected)
+        {
+            informator.ShowInfo(informable.GetInfo());
+        }
+        else
+            informator.ShowInfo(null);
     }
 
     private void Zoom()
     {
         float delta = Clamper101(-GetController.Movement.ZoomMouse.ReadValue<float>());
-        //if (delta < minZoom)
         if(delta == 0) return;
         else if(maxZoom >= gameCamera.orthographicSize + delta && gameCamera.orthographicSize + delta >= minZoom)
             gameCamera.orthographicSize += delta * zoomChangeSpeed;
@@ -101,8 +119,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-
-    private void ShowInfoInGame()
+    private void FinInfoObjcet()
     {
         Vector2 r = Camera.main.ScreenToWorldPoint(GetController.Movement.PositionMouse.ReadValue<Vector2>());
         RaycastHit2D hit = Physics2D.Raycast(r, Vector2.zero, infoLayerMask);
@@ -111,7 +128,7 @@ public class CameraController : MonoBehaviour
         {
             if (hit.transform.TryGetComponent(out IInformable s))
             {
-                FindObjectOfType<Informator>().ShowInfo(s.GetInfo());
+                informable = s;
             }
         }
     }

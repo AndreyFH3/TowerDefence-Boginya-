@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
 
     [SerializeField] private Wallet _wallet;
 
-    private int _enemiesSpawned;
+    private static int _enemiesSpawned;
     private bool isGameEnded = false;
     [SerializeField] public Canvas winCanvas;
     [SerializeField] private TextMeshProUGUI waveInfoText;
@@ -57,8 +57,8 @@ public class Spawner : MonoBehaviour
     private IEnumerator SpawnWave()
     {
         WaitForSeconds wait = new WaitForSeconds(_timeToSpawn);
-        waveInfoText.text = $"Wave: {CurrentWave} Enemies: {WaveSize[_currentWave]}";
-        while (_enemiesSpawned <= WaveSize[_currentWave])
+        waveInfoText.text = $"Wave: {CurrentWave + 1} Enemies: {WaveSize[_currentWave]}";
+        while (_enemiesSpawned <= WaveSize[_currentWave] -1)
         {
             {
                 _enemiesSpawned++;
@@ -69,19 +69,18 @@ public class Spawner : MonoBehaviour
                 aiEnemy.GetComponent<EnemyHealth>().RegisterEvent(
                     (int num) =>
                     {
-                        Spawner spwn = this;
-                        spwn._enemiesSpawned--;
-                        waveInfoText.text = $"Wave: {CurrentWave} Enemies: {spwn._enemiesSpawned}";
-                        if (spwn._enemiesSpawned <= 0)
+                        _enemiesSpawned--;
+                        waveInfoText.text = $"Волна: {CurrentWave + 1} Врагов: {_enemiesSpawned}";
+                        if (_enemiesSpawned <= 0)
                         {
-                            if (spwn._currentWave >= WaveSize.Length)
+                            if (_currentWave >= WaveSize.Length - 1)
                             {
                                 GameWon();
                             }
                             else
                             {
                                 StartCoroutine(SpawnWave());
-                                spwn.CurrentWave++;
+                                CurrentWave++;
                             }
 
                         }

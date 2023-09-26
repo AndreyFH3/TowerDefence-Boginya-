@@ -22,14 +22,18 @@ public class BattalefieldBuilder : MonoBehaviour
 
         foreach (var builds in buildable)
         {
-            controller.Building.Build.performed += _ => 
+            controller.Building.Build.performed += _ =>
             {
                 if (BuildSystem.IsClickOnUI())
                 {
                     builds.StopBuild();
+
                 }
                 else if (builds.IsSelected)
-                    builds.Build(); 
+                {
+                    builds.Build();
+                    
+                }
             };
             controller.Building.RemoveBuilding.performed += _ => 
             { 

@@ -17,6 +17,7 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] private protected float _shootTime;
     [SerializeField] private protected float _range;
     [SerializeField] private protected int _damage;
+    public int Damage => _damage;
 
     public abstract void Attack(Transform enemyPosition);
 
